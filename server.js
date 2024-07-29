@@ -1,14 +1,14 @@
-const express=require('express');
-const connectDB=require('./config/db');
-const userRoutes=require('./routes/UserRoutes');
-const taskRoutes=require('./routes/TaskRoutes');
-const Task=require('./models/Task');
-const dotenv=require('dotenv');
-const cron=require('node-cron');
-dotenv.config();
+import express, { json } from 'express';
+import connectDB from './config/db.js';
+import userRoutes from './routes/UserRoutes.js';
+import taskRoutes from './routes/TaskRoutes.js';
+import Task from './models/Task.js';
+import { config } from 'dotenv';
+import { schedule } from 'node-cron';
+config();
 const app=express();
 connectDB();
-app.use(express.json());
+app.use(json());
 app.use('/api/users',userRoutes);
 app.use('/api/tasks',taskRoutes);
 const sendNotification=async()=>{
@@ -22,7 +22,7 @@ const sendNotification=async()=>{
         await task.save();
     });
 };
-cron.schedule('0 9 * * *',sendNotification);
+schedule('0 9 * * *',sendNotification);
 const PORT=process.env.PORT || 5000;
 app.listen(PORT,()=>{
     console.log(`Server is listening on port ${PORT}`);

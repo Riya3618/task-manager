@@ -1,5 +1,5 @@
-const Task=require('../models/Task');
-exports.createTask=async(req,res)=>{
+import Task from "../models/Task.js";
+export const createTask=async(req,res)=>{
     const {title,description,dueDate}=req.body;
     try{
         const task=await Task.create({title,description,dueDate,user:req.user.id});
@@ -10,12 +10,12 @@ exports.createTask=async(req,res)=>{
         res.status(400).json({message: 'Task could not be created'});
     }
 };
-exports.getTask=async(req,res)=>{
+export const getTask=async(req,res)=>{
     const tasks=await Task.find({user:req.user.id});
     res.json(tasks);
 };
 
-exports.updateTask=async(req,res)=>{
+export const updateTask=async(req,res)=>{
     const {title,description,dueDate,status}=req.body;
     try{
         const task=await Task.findByIdAndUpdate(
@@ -33,7 +33,7 @@ exports.updateTask=async(req,res)=>{
     }
 };
 
-exports.deleteTask=async(req,res)=>{
+export const deleteTask=async(req,res)=>{
     try{
         const task=await Task.findByIdAndDelete(req.params.id);
         if(!task){
@@ -45,7 +45,7 @@ exports.deleteTask=async(req,res)=>{
         res.status(500).json({message: e.message});
     }
 };
-exports.getNotifications=async(req,res)=>{
+export const getNotifications=async(req,res)=>{
     try{
         const tasks=await Task.find({user: req.user.id}).populate('user');
         const notifications=tasks.flatMap(task=>task.notifications);

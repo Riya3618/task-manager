@@ -1,6 +1,6 @@
-const User=require('../models/User');
-const jwt=require('jsonwebtoken');
-exports.register=async(req,res)=>{
+import User from '../models/User.js'
+import jwt from 'jsonwebtoken';
+export const register=async(req,res)=>{
     const{username,password}=req.body;
     try{
         const user=await User.create({username,password});
@@ -10,7 +10,7 @@ exports.register=async(req,res)=>{
         res.status(400).json({message:'Error',e});
     }
 };
-exports.login=async(req,res)=>{
+export const login=async(req,res)=>{
     const{username,password}=req.body;
     const user=await User.findOne({username});
     if(user && (await User.matchPassword(password))){
